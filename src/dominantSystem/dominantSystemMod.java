@@ -23,7 +23,7 @@ public class dominantSystemMod extends Mod {
     public static boolean DEBUGGING = false;
     public static Mods.LoadedMod MOD;
 
-    //Мод работает на android?
+    //Мод работает на android??
     public dominantSystemMod(){
 
     }
