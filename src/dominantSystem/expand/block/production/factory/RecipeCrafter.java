@@ -1,0 +1,360 @@
+package dominantSystem.expand.block.production.factory;
+
+import arc.Core;
+import arc.audio.Sound;
+import arc.graphics.Color;
+import arc.math.Mathf;
+import arc.scene.ui.Image;
+import arc.scene.ui.layout.Stack;
+import arc.scene.ui.layout.Table;
+import arc.struct.Seq;
+import arc.util.Scaling;
+import arc.util.Strings;
+import arc.util.Time;
+import mindustry.content.Fx;
+import mindustry.core.UI;
+import mindustry.ctype.UnlockableContent;
+import mindustry.entities.Effect;
+import mindustry.entities.Lightning;
+import mindustry.game.Team;
+import mindustry.gen.Icon;
+import mindustry.gen.Sounds;
+import mindustry.type.*;
+import mindustry.ui.Styles;
+import mindustry.world.Block;
+import mindustry.world.blocks.payloads.BuildPayload;
+import mindustry.world.meta.BlockStatus;
+import mindustry.world.meta.Stat;
+import mindustry.world.meta.StatUnit;
+import mindustry.world.meta.StatValue;
+import dominantSystem.expand.block.consumer.ConsumeRecipe;
+import dominantSystem.expand.type.Recipe;
+
+import static mindustry.world.meta.StatValues.withTooltip;
+
+public class RecipeCrafter extends AdaptCrafter {
+    public boolean genLightning = false;
+    public boolean insulated = false;
+
+    /*only works with isolated = false
+    reduces lightning damage for this building
+     */
+    public boolean hasProtect = false;
+    public boolean doubleEffect = false;
+    public float lightningInterval = 60;
+    public float lightningDamage = 20;
+    public Color lightningColor = Color.white;
+    public Effect damageEffect = Fx.hitLaserBlast;
+    public Sound damageSound = Sounds.spark;
+    public float damageSoundVolume = 0.6f, damageSoundPitchRand = 0.1f;
+    public Seq<Recipe> recipes = new Seq<>();
+
+    public Seq<Item> itemOutput = new Seq<>();
+    public Seq<Liquid> liquidOutput = new Seq<>();
+    public Seq<UnlockableContent> payloadOutput = new Seq<>();
+
+    public RecipeCrafter(String name) {
+        super(name);
+        consume(new ConsumeRecipe(RecipeCrafterBuild::getRecipe, RecipeCrafterBuild::getDisplayRecipe));
+        ambientSound = Sounds.machine;
+        ambientSoundVolume = 0.05f;
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        recipes.each(recipe -> {
+            recipe.inputItem.each(stack -> itemFilter[stack.item.id] = true);
+            recipe.inputLiquid.each(stack -> liquidFilter[stack.liquid.id] = true);
+            recipe.inputPayload.each(stack -> payloadFilter.add(stack.item));
+
+            recipe.outputItem.each(stack -> itemOutput.add(stack.item));
+            recipe.outputLiquid.each(stack -> liquidOutput.add(stack.liquid));
+            recipe.outputPayload.each(stack -> payloadOutput.add(stack.item));
+        });
+
+        outputItem = null;
+        outputLiquid = null;
+
+        outputItems = null;
+        outputLiquids = null;
+        outputPayloads = null;
+
+        craftTime = 60f;
+        if (!liquidOutput.isEmpty()) outputsLiquid = true;
+    }
+
+    @Override
+    public boolean outputsItems(){
+        return !itemOutput.isEmpty();
+    }
+
+    @Override
+    public void setStats() {
+        super.setStats();
+        stats.add(Stat.input, display());
+        stats.remove(Stat.output);
+        stats.remove(Stat.productionTime);
+    }
+
+    public StatValue display() {
+        return table -> {
+            table.row();
+            table.table(cont -> {
+                for (int i = 0; i < recipes.size; i++){
+                    Recipe recipe = recipes.get(i);
+                    int finalI = i;
+                    cont.table(t -> {
+                        t.left().marginLeft(12f).add("|" + (finalI + 1) + "|   " + (Math.floor(recipe.craftTime/0.6)/100) + Core.bundle.get("unit.seconds")).color(Color.lightGray).width(130);
+                        t.table(inner -> {
+                            inner.table(row -> {
+                                row.left();
+                                recipe.inputItem.each(stack -> row.add(display(stack.item, stack.amount, recipe.craftTime)));
+                                recipe.inputLiquid.each(stack -> row.add(display(stack.liquid, stack.amount * Time.toSeconds, 60f)));
+                                recipe.inputPayload.each(stack -> row.add(display(stack.item, stack.amount, recipe.craftTime)));
+                            }).growX();
+                            inner.table(row -> {
+                                row.left();
+                                row.image(Icon.rightOpen).size(32f).padLeft(8f).padRight(12f);
+                                recipe.outputItem.each(stack -> row.add(display(stack.item, stack.amount, recipe.craftTime)));
+                                recipe.outputLiquid.each(stack -> row.add(display(stack.liquid, stack.amount * Time.toSeconds, 60f)));
+                                recipe.outputPayload.each(stack -> row.add(display(stack.item, stack.amount, recipe.craftTime)));
+                            }).growX();
+                        });
+                    }).fillX();
+                    cont.row();
+                }
+            });
+        };
+    }
+
+    @Override
+    public void setBars() {
+        super.setBars();
+        removeBar("liquid");
+
+        recipes.each(recipe -> {
+            recipe.inputLiquid.each(stack -> addLiquidBar(stack.liquid));
+            recipe.outputLiquid.each(stack -> addLiquidBar(stack.liquid));
+        });
+    }
+
+    public static Table display(UnlockableContent content, float amount, float timePeriod){
+        Table table = new Table();
+        Stack stack = new Stack();
+
+        stack.add(new Table(o -> {
+            o.left();
+            o.add(new Image(content.uiIcon)).size(32f).scaling(Scaling.fit);
+        }));
+
+        if(amount != 0){
+            stack.add(new Table(t -> {
+                t.left().bottom();
+                t.add(amount >= 1000 ? UI.formatAmount((int)amount) : Strings.autoFixed(amount, 2)).style(Styles.outlineLabel);
+                t.pack();
+            }));
+        }
+
+        withTooltip(stack, content);
+
+        table.add(stack);
+        table.add((content.localizedName + "\n") + "[lightgray]" + Strings.autoFixed(amount / (timePeriod / 60f), 2) + StatUnit.perSecond.localized()).padLeft(2).padRight(5).style(Styles.outlineLabel);
+        return table;
+    }
+
+    public class RecipeCrafterBuild extends AdaptCrafterBuild {
+        public int recipeIndex = -1;
+        float timer = 0;
+
+        public Recipe getRecipe() {
+            if (recipeIndex < 0 || recipeIndex >= recipes.size) return null;
+            return recipes.get(recipeIndex);
+        }
+
+        public Recipe getDisplayRecipe() {
+            if (recipeIndex < 0 && recipes.size > 0) {
+                return recipes.first();
+            }
+            return getRecipe();
+        }
+
+        public void updateRecipe() {
+            for (int i = recipes.size - 1; i >= 0; i--) {
+                boolean valid = true;
+
+                for (ItemStack input : recipes.get(i).inputItem) {
+                    if (items.get(input.item) < input.amount) {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                for (LiquidStack input : recipes.get(i).inputLiquid) {
+                    if (liquids.get(input.liquid) < input.amount * Time.delta) {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                for (PayloadStack input : recipes.get(i).inputPayload) {
+                    if (getPayloads().get(input.item) < input.amount) {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                if (valid) {
+                    recipeIndex = i;
+                    return;
+                }
+            }
+            recipeIndex = -1;
+        }
+
+        public boolean validRecipe() {
+            if (recipeIndex < 0) return false;
+            for (ItemStack input : recipes.get(recipeIndex).inputItem) {
+                if (items.get(input.item) < input.amount) {
+                    return false;
+                }
+            }
+
+            for (LiquidStack input : recipes.get(recipeIndex).inputLiquid) {
+                if (liquids.get(input.liquid) < input.amount * Time.delta) {
+                    return false;
+                }
+            }
+
+            for (PayloadStack input : recipes.get(recipeIndex).inputPayload) {
+                if (getPayloads().get(input.item) < input.amount) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public void updateTile() {
+            int randDegress = Mathf.random(1,360);
+            if (!validRecipe()) updateRecipe();
+            super.updateTile();
+            if (getRecipe() == null) return;
+            if(efficiency > 0){
+                float inc = getProgressIncrease(craftTime / getRecipe().craftTime);
+                getRecipe().outputLiquid.each(stack -> {
+                    handleLiquid(this, stack.liquid, Math.min(stack.amount * inc, liquidCapacity - liquids.get(stack.liquid)));
+                });
+
+
+                timer += Time.delta;
+                if(genLightning){
+                        if (timer >= lightningInterval) {
+                            timer = 0;
+                            if(insulated) {
+                                damageEffect.at(x, y, rotation = randDegress);
+                                if (doubleEffect){damageEffect.at(x, y, rotation = randDegress - Mathf.random(20, 60));}
+                                damageSound.at(x, y, 1f + Mathf.range(damageSoundPitchRand), damageSoundVolume);
+                                this.health -= lightningDamage;
+                            }
+                            else {
+                                damageEffect.at(x, y, rotation = randDegress);
+                                if (doubleEffect){damageEffect.at(x, y, rotation = randDegress - Mathf.random(20, 60));}
+                                damageSound.at(x, y, 1f + Mathf.range(damageSoundPitchRand), damageSoundVolume);
+                                Lightning.create(Team.derelict, lightningColor, lightningDamage, this.x, this.y, randDegress, 8);
+                                if(hasProtect){this.health += lightningDamage * (size/2f);}
+                            }
+                    }
+                }
+            }
+            getRecipe().outputItem.each(stack -> {
+                if (items.get(stack.item) >= itemCapacity) {
+                    items.set(stack.item, itemCapacity);
+                }
+            });
+            getRecipe().outputPayload.each(stack -> {
+                if (getPayloads().get(stack.item) >= payloadCapacity) {
+                    getPayloads().remove(stack.item, getPayloads().get(stack.item) - payloadCapacity);
+                }
+            });
+        }
+
+        @Override
+        public void dumpOutputs() {
+            boolean timer = timer(timerDump, dumpTime / timeScale);
+            if (timer) {
+                itemOutput.each(this::dump);
+                payloadOutput.each(output -> {
+                    BuildPayload payload = new BuildPayload((Block) output, team);
+                    payload.set(x, y, rotdeg());
+                    dumpPayload(payload);
+                });
+            }
+            liquidOutput.each(output -> dumpLiquid(output, 2f, -1));
+        }
+
+        @Override
+        public boolean shouldConsume() {
+            if (getRecipe() == null) return false;
+            for (var output : getRecipe().outputItem) {
+                if (items.get(output.item) + output.amount > itemCapacity) {
+                    return powerProduction > 0;
+                }
+            }
+            for (var output : getRecipe().outputPayload) {
+                if (getPayloads().get(output.item) + output.amount > payloadCapacity) {
+                    return powerProduction > 0;
+                }
+            }
+            if (!ignoreLiquidFullness) {
+                if (getRecipe().outputLiquid.isEmpty()) return true;
+                boolean allFull = true;
+                for (var output : getRecipe().outputLiquid) {
+                    if (liquids.get(output.liquid) >= liquidCapacity - 0.001f) {
+                        if (!dumpExtraLiquid) {
+                            return false;
+                        }
+                    } else {
+                        allFull = false;
+                    }
+                }
+                if (allFull) {
+                    return false;
+                }
+            }
+            return enabled;
+        }
+
+        @Override
+        public float getProgressIncrease(float baseTime) {
+            float scl = 1f;
+            if (getRecipe() != null) scl = getRecipe().craftTime / craftTime;
+            return super.getProgressIncrease(baseTime) / scl;
+        }
+
+        @Override
+        public void craft() {
+            if (getRecipe() == null) return;
+
+            consume();
+
+            getRecipe().outputItem.each(stack -> {
+                for(int i = 0; i < stack.amount; i++){
+                    offload(stack.item);
+                }
+            });
+            getRecipe().outputPayload.each(stack -> payloads.add(stack.item, stack.amount));
+
+            progress %= 1f;
+
+            if(wasVisible) craftEffect.at(x, y);
+            updateRecipe();
+        }
+
+        @Override
+        public BlockStatus status() {
+            if (enabled && getRecipe() == null) return BlockStatus.noInput;
+            return super.status();
+        }
+    }
+}

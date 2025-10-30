@@ -1,0 +1,8 @@
+displayName: "DominantSystem"
+name: "dominant-system"
+author: "C9 \n Spriters: Octumium\n Composers: ACE"
+description: ""
+version: "[accent]1.0 Beta"
+minGameVersion: "150"
+java: "true"
+main: "dominantSystem.dominantSystemMod"
