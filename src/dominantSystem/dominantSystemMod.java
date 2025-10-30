@@ -37,6 +37,7 @@ public class dominantSystemMod extends Mod {
         MOD.meta.author = Core.bundle.get("mod.dominant-system.author");
         MOD.meta.description = Core.bundle.get("mod.dominant-system.description");
         MOD.meta.subtitle = Core.bundle.get("mod.dominant-system.subtitle");
+        MOD.meta.repo = "C9Cps/C9-dominantSystem";
         dsSounds.load();
         dsBullets.load();
         dsStatusEffects.load();
