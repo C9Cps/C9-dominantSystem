@@ -13,10 +13,6 @@ import dominantSystem.expand.block.production.factory.RecipeCrafter;
 import dominantSystem.expand.type.Recipe;
 
 public class RecipeRegister {
-/*crusher, smeltingFacility, metaRefinery, thiriumArcSmelter, refractoryCrucible, etheroniumSmelter, mycondiumCrucible,
-    armorFabricator, coreFabricator,
-    gelSynthesizer;
-*/
     public static void load(){
         recipe(CraftingBlock.crusher, recipe -> {
             recipe.inputItem = ItemStack.list(dsItems.scrap, 1);
@@ -40,17 +36,38 @@ public class RecipeRegister {
         recipe(CraftingBlock.smeltingFacility, recipe -> {
             recipe.inputItem = ItemStack.list(dsItems.coal, 3, dsItems.sand, 5);
             recipe.outputItem = ItemStack.list(dsItems.silicon, 3);
-            recipe.craftTime = (2/3f*60);
+            recipe.craftTime = (60/0.6f);
             recipe.priority = 1;
         });
         recipe(CraftingBlock.smeltingFacility, recipe -> {
-            recipe.inputItem = ItemStack.list(dsItems.coal, 4, dsItems.sand, 6, dsItems.pyratite, 1);
+            recipe.inputItem = ItemStack.list(dsItems.coal, 4, dsItems.sand, 5, dsItems.pyratite, 1);
             recipe.inputLiquid = LiquidStack.list(dsLiquids.runiy, 10f/60);
             recipe.outputItem = ItemStack.list(dsItems.silicon, 6);
-            recipe.craftTime = (2/3f*60);
+            recipe.craftTime = (60/0.75f);
             recipe.priority = 2;
         });
+        recipe(CraftingBlock.smeltingFacility, recipe -> {
+            recipe.inputItem = ItemStack.list(dsItems.coal, 9, dsItems.sand, 14, dsItems.pyratite, 1);
+            recipe.inputPayload = PayloadStack.list(ModuleBlock.thermoGel, 1);
+            recipe.outputItem = ItemStack.list(dsItems.silicon, 16);
+            recipe.craftTime = (60/0.4f);
+            recipe.priority = 3;
+        });
 
+        recipe(CraftingBlock.oxidativeFacility, recipe -> {
+            recipe.inputItem = ItemStack.list(dsItems.beryllium, 3);
+            recipe.inputLiquid = LiquidStack.list(dsLiquids.ozone, 3f/60);
+            recipe.outputItem = ItemStack.list(dsItems.oxide, 2);
+            recipe.craftTime = (60/0.75f);
+            recipe.priority = 1;
+        });
+        recipe(CraftingBlock.oxidativeFacility, recipe -> {
+            recipe.inputItem = ItemStack.list(dsItems.beryllium, 5, dsItems.silicon, 1);
+            recipe.inputLiquid = LiquidStack.list(dsLiquids.ozone, 4f/60);
+            recipe.outputItem = ItemStack.list(dsItems.oxide, 4);
+            recipe.craftTime = (60/0.8f);
+            recipe.priority = 2;
+        });
         recipe(CraftingBlock.resourseConverter, recipe -> {
             recipe.inputItem = ItemStack.list(dsItems.copper, 1);
             recipe.outputItem = ItemStack.list(dsItems.beryllium, 1);

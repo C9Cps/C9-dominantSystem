@@ -107,24 +107,26 @@ public class CraftingBlock {
             consumePower(210 / 60f);
             drawer = new DrawMulti(new DrawRegionRotated(){{oneSprite = true;}}, new DrawWeave(), new DrawRegionRotated("-rot"));
          }};
-        /*
         oxidativeFacility = new RecipeCrafter("oxidative-facility") {{
             requirements(Category.crafting, with(dsItems.tungsten, 120, dsItems.thirium, 140, dsItems.silicon, 110, dsItems.thorium, 90, dsItems.plastanium, 70));
             size = 3; addLink(
                     -1,2,1, 0,2,1, 1,2,1,
-                    -1,-2,1, 0,-2,1,  1,-2,1,
+                    -1,-2,1, 0,-2,1, 1,-2,1,
                     2,1,1, 2,0,1, 2,-1,1,
                     -2,1,1, -2,0,1, -2,-1,1);
 
             itemCapacity = 30;
             consumePower(210f / 60f);
             drawer = new DrawMulti(
-                    new DrawRegion("bottom"),
+                    new DrawRegion("-bottom"),
+                    new MDrawLiquidTile(){{drawLiquid = dsLiquids.ozone; x = 12; padLeft = padRight = 8;}},
+                    new MDrawLiquidTile(){{drawLiquid = dsLiquids.ozone; x = -12; padLeft = padRight = 8;}},
+                    new MDrawLiquidTile(){{drawLiquid = dsLiquids.ozone; y = 12; padBottom = padTop = 8;}},
+                    new MDrawLiquidTile(){{drawLiquid = dsLiquids.ozone; y = -12; padBottom = padTop = 8;}},
+                    new MDrawLiquidTile(){{drawLiquid = dsLiquids.ozone; padding = 4;}},
                     new DrawDefault());
             rotate = rotateDraw = false;
         }};
-
-         */
         mycondiumCrucible = new RecipeCrafter("mycondium-crucible") {{
             requirements(Category.crafting, with(dsItems.thirium, 180, dsItems.silicon, 150, dsItems.plastanium, 130, dsItems.carbide, 110));
             size = 2;
@@ -170,6 +172,7 @@ public class CraftingBlock {
                     new DrawDefault());
             rotate = rotateDraw = false;
         }};
+        /*
         filterFacility = new RecipeCrafter("filter-facility") {{
             requirements(Category.production, with(dsItems.thirium, 30, dsItems.graphite, 20));
             size = 1; addLink(0, 1, 1,   1, 0, 1);
@@ -182,7 +185,7 @@ public class CraftingBlock {
                     new DrawLiquidTile(){{drawLiquid = dsLiquids.water;}},
                     new DrawRegionRotated("-rot"));
         }};
-        /*ammunitionFabricator = new RecipeCrafter("ammunition-fabricator") {{
+        ammunitionFabricator = new RecipeCrafter("ammunition-fabricator") {{
             requirements(Category.crafting, with(dsItems.silicon, 180, dsItems.graphite, 190, dsItems.thorium, 160));
             size = 2;
 
