@@ -23,12 +23,14 @@ public class PowerBlock {
             laserRange = 12f;
             maxNodes = 16;
         }};
+        /*
         effulgentPowerNodeLarge = new RegenPowerNode("effulgent-power-node-large") {{
             requirements(Category.power, with(dsItems.thirium, 20, dsItems.fiberglass, 10, dsItems.etheronium, 15));
             size = 2;
             laserRange = 26;
             maxNodes = 24;
         }};
+         */
         thermoisotopeGenerator = new RecipeCrafter("thermoisotope-generator") {{
             requirements(Category.power, with(dsItems.thirium, 125, dsItems.fiberglass, 90, dsItems.etheronium, 70));
             squareSprite = false;
@@ -66,7 +68,7 @@ public class PowerBlock {
             lightingColor = dsLiquids.cyanogen.color;
 
             consumePower(7500/60f);
-            consumeItems(with(dsItems.etheronium, 2, dsItems.fiberglass, 1));
+            consumeItems(with(dsItems.etheronium, 2, dsItems.surgeAlloy, 1));
             consumeLiquid(dsLiquids.cyanogen, 10f/60);
         }};
     }};

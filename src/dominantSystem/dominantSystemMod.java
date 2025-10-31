@@ -23,21 +23,14 @@ public class dominantSystemMod extends Mod {
     public static boolean DEBUGGING = false;
     public static Mods.LoadedMod MOD;
 
-    //Мод работает на android??
+    //Мод работает на android?!?
     public dominantSystemMod(){
 
     }
     @Override
     public void loadContent() {
-        Time.mark();
-
         MOD = mods.getMod(getClass());
-        MOD.meta.displayName = Core.bundle.get("mod.dominant-system.name");
-        MOD.meta.version = Core.bundle.get("mod.dominant-system.version");
-        MOD.meta.author = Core.bundle.get("mod.dominant-system.author");
-        MOD.meta.description = Core.bundle.get("mod.dominant-system.description");
-        MOD.meta.subtitle = Core.bundle.get("mod.dominant-system.subtitle");
-        MOD.meta.repo = "C9Cps/C9-dominantSystem";
+
         dsSounds.load();
         dsBullets.load();
         dsStatusEffects.load();

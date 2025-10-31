@@ -39,7 +39,8 @@ public class UnitBlock {
             constructTime = 40f * 60;
 
             upgrades.addAll(
-                    new dsUnitType[]{dsUnitTypes.madness, dsUnitTypes.chaos}
+                    new dsUnitType[]{dsUnitTypes.madness, dsUnitTypes.chaos},
+                    new dsUnitType[]{dsUnitTypes.spear, dsUnitTypes.retribution}
             );
         }};
 
@@ -54,7 +55,8 @@ public class UnitBlock {
             constructTime = 50f * 60;
 
             upgrades.addAll(
-                    new dsUnitType[]{dsUnitTypes.chaos, dsUnitTypes.anarchy}
+                    new dsUnitType[]{dsUnitTypes.chaos, dsUnitTypes.anarchy},
+                    new dsUnitType[]{dsUnitTypes.retribution, dsUnitTypes.demolisher}
             );
         }};
 
