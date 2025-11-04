@@ -12,7 +12,7 @@ import dominantSystem.content.blocks.CraftingBlock;
 import dominantSystem.expand.block.production.factory.RecipeCrafter;
 import dominantSystem.expand.type.Recipe;
 
-public class RecipeRegister {
+public class CraftingRecipe {
     public static void load(){
         recipe(CraftingBlock.crusher, recipe -> {
             recipe.inputItem = ItemStack.list(dsItems.scrap, 1);
@@ -47,7 +47,7 @@ public class RecipeRegister {
             recipe.priority = 2;
         });
         recipe(CraftingBlock.smeltingFacility, recipe -> {
-            recipe.inputItem = ItemStack.list(dsItems.coal, 9, dsItems.sand, 14, dsItems.pyratite, 1);
+            recipe.inputItem = ItemStack.list(dsItems.coal, 9, dsItems.sand, 14);
             recipe.inputPayload = PayloadStack.list(ModuleBlock.thermoGel, 1);
             recipe.outputItem = ItemStack.list(dsItems.silicon, 16);
             recipe.craftTime = (60/0.4f);
@@ -68,32 +68,6 @@ public class RecipeRegister {
             recipe.craftTime = (60/0.8f);
             recipe.priority = 2;
         });
-        recipe(CraftingBlock.resourseConverter, recipe -> {
-            recipe.inputItem = ItemStack.list(dsItems.copper, 1);
-            recipe.outputItem = ItemStack.list(dsItems.beryllium, 1);
-            recipe.craftTime = 3/3f*60;
-            recipe.priority = 1;
-        });
-        recipe(CraftingBlock.resourseConverter, recipe -> {
-            recipe.inputItem = ItemStack.list(dsItems.lead, 2);
-            recipe.outputItem = ItemStack.list(dsItems.beryllium, 1);
-            recipe.craftTime = 4/3f*60;
-            recipe.priority = 1;
-        });
-        recipe(CraftingBlock.resourseConverter, recipe -> {
-            recipe.inputItem = ItemStack.list(dsItems.titanium, 2);
-            recipe.outputItem = ItemStack.list(dsItems.tungsten, 1);
-            recipe.craftTime = 4/3f*60;
-            recipe.priority = 1;
-        });
-
-        recipe(CraftingBlock.filterFacility, recipe -> {
-            recipe.inputLiquid = LiquidStack.list(dsLiquids.runiy, 20f /60);
-            recipe.outputLiquid = LiquidStack.list(dsLiquids.water, 10f /60);
-            recipe.craftTime = (1*60f);
-            recipe.priority = 1;
-        });
-
         recipe(CraftingBlock.refractoryCrucible, recipe -> {
             recipe.inputItem = ItemStack.list(dsItems.tungsten, 2, dsItems.graphite, 3, dsItems.silicon, 1);
             recipe.outputItem = ItemStack.list(dsItems.carbide, 3);

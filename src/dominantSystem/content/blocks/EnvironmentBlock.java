@@ -133,17 +133,17 @@ public class EnvironmentBlock {
 
         runeSporeCharged = new Floor("rune-spore-charged"){{
             variants = 3;
-            attributes.set(Attribute.spores, 1.0f);
+            attributes.set(Attribute.spores, 0.5f);
             drawEdgeIn = drawEdgeOut = sf;
         }};
         runeSpore = new Floor("rune-spore"){{
             variants = 3;
-            attributes.set(Attribute.spores, 0.5f);
+            attributes.set(Attribute.spores, 0.25f);
             drawEdgeIn = drawEdgeOut = sf;
         }};
         runeSporeSmoldering = new Floor("rune-spore-smoldering"){{
             variants = 3;
-            attributes.set(Attribute.spores, 0.25f);
+            attributes.set(Attribute.spores, 0.125f);
             drawEdgeIn = drawEdgeOut = sf;
         }};
 

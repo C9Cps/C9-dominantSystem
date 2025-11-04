@@ -10,7 +10,7 @@ import mindustry.type.ItemStack;
 import mindustry.type.PayloadStack;
 import mindustry.world.Block;
 
-public class PowerRecipeRegister {
+public class PowerRecipe {
 /*thermoisotopeGenerator;
 */
     public static void load(){
