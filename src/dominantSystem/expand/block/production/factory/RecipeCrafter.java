@@ -39,6 +39,7 @@ public class RecipeCrafter extends AdaptCrafter {
     /*only works with isolated = false
     reduces lightning damage for this building
      */
+    public boolean rot = true;
     public boolean hasProtect = false;
     public boolean doubleEffect = false;
     public float lightningInterval = 60;
@@ -56,7 +57,7 @@ public class RecipeCrafter extends AdaptCrafter {
     public RecipeCrafter(String name) {
         super(name);
         consume(new ConsumeRecipe(RecipeCrafterBuild::getRecipe, RecipeCrafterBuild::getDisplayRecipe));
-        ambientSound = Sounds.machine;
+        ambientSound = Sounds.smelter;
         ambientSoundVolume = 0.05f;
     }
 
@@ -82,6 +83,7 @@ public class RecipeCrafter extends AdaptCrafter {
 
         craftTime = 60f;
         if (!liquidOutput.isEmpty()) outputsLiquid = true;
+        if(!rot){rotate = rotateDraw = false;}
     }
 
     @Override

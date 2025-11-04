@@ -37,7 +37,7 @@ public class dsUnitTypes{
     //Legs
     madness, chaos, anarchy, anger, rage, catastrophe,
     //Air
-    spear, retribution, demolisher,
+    spear, retribution, demolisher, executioner,
             none;
 
     public static void load(){
@@ -985,7 +985,7 @@ public class dsUnitTypes{
                     new Weapon("dominant-system-demolisher-gunner"){{
                         mirror = true;
                         top = true;
-                        layerOffset = 11f;
+                        layerOffset = 0.1f;
                         y = -4f;
                         x = 8f;
                         rotate = true;
@@ -1011,6 +1011,100 @@ public class dsUnitTypes{
 
                             width = 9f;
                             height = 12f;
+
+                            backColor = frontColor = Color.valueOf("FFA665");
+                            shootEffect = Fx.smeltsmoke;
+                            smokeEffect = Fx.shootSmallSmoke;
+
+                            trailColor = Pal.unitBack;
+                            backColor = Pal.unitBack;
+                            frontColor = Pal.unitFront;
+                            hitEffect = Fx.blastExplosion;
+                            despawnEffect = Fx.blastExplosion;
+                        }};
+                    }});
+        }};
+        executioner = new dsUnitType("executioner"){{
+            constructor = UnitEntity::create;
+            lowAltitude = true;
+
+            health = 7500;
+            armor = 11;
+            speed = sp * 7f;
+            rotateSpeed = 2.2f;
+            drag = 0.04f;
+            accel = 0.04f;
+
+            flying = true;
+            targetFlags = new BlockFlag[]{BlockFlag.core, BlockFlag.shield};
+            hitSize = 40;
+            itemCapacity = 90;
+            engineSize = 3.5f;
+            engineOffset = 19;
+            weapons.add(
+                    new Weapon("dominant-system-executioner-mount"){{
+                        mirror = false;
+                        top = true;
+                        layerOffset = 1f;
+                        y = -8f;
+                        x = 0f;
+                        rotate = true;
+                        rotateSpeed = 1.8f;
+
+                        shoot = new ShootAlternate(4.5f){{barrels = 3;}};
+
+                        reload = 60/3f;
+                        shootSound = Sounds.missile;
+                        bullet = new MissileBulletType(5f, 48,"missile"){{
+                            layer += 1;
+                            lifetime = 19.5f / 5*8;
+                            keepVelocity = false;
+                            shrinkY = 0f;
+                            drag = -0.003f;
+
+                            trailWidth = 2;
+                            trailLength = 8;
+
+                            homingRange = 60f;
+                            homingPower = 0.1f;
+
+                            weaveScale = 4f;
+                            weaveMag = 2f;
+
+                            splashDamageRadius = 1.5f * 8;
+                            splashDamage = 24f;
+
+                            width = 8f;
+                            height = 9f;
+
+                            backColor = frontColor = Color.valueOf("FFA665");
+                            shootEffect = Fx.smeltsmoke;
+                            smokeEffect = Fx.shootSmallSmoke;
+
+                            backColor = trailColor = Pal.unitBack;
+                            frontColor = Pal.unitFront;
+                            hitEffect = Fx.blastExplosion;
+                            despawnEffect = Fx.blastExplosion;
+                        }};
+                    }},
+                    new Weapon("dominant-system-executioner-gunner"){{
+                        mirror = true;
+                        top = true;
+                        y = -6f;
+                        x = 17f;
+                        rotate = true;
+                        rotateSpeed = 1.8f;
+
+                        reload = 60/4f;
+                        shootSound = Sounds.bang;
+                        bullet = new BasicBulletType(5f, 25){{
+                            lifetime = 24f / 4*8;
+
+                            width = 9f;
+                            height = 12f;
+
+                            trailWidth = 2;
+                            trailLength = 4;
 
                             backColor = frontColor = Color.valueOf("FFA665");
                             shootEffect = Fx.smeltsmoke;

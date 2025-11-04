@@ -1,14 +1,14 @@
 package dominantSystem;
 
-import arc.Core;
 import arc.util.*;
 import dominantSystem.content.blocks.InnerBlock;
-import dominantSystem.content.register.PowerRecipeRegister;
+import dominantSystem.content.register.PowerRecipe;
+import dominantSystem.content.register.ProductionRecipe;
 import mindustry.mod.Mod;
 import mindustry.mod.Mods;
 import dominantSystem.content.blocks.*;
 import dominantSystem.content.*;
-import dominantSystem.content.register.RecipeRegister;
+import dominantSystem.content.register.CraftingRecipe;
 
 import static mindustry.Vars.*;
 
@@ -23,6 +23,7 @@ public class dominantSystemMod extends Mod {
     public static boolean DEBUGGING = false;
     public static Mods.LoadedMod MOD;
 
+    //Мод работает на android?!?
     public dominantSystemMod(){
 
     }
@@ -41,6 +42,7 @@ public class dominantSystemMod extends Mod {
         InnerBlock.load();
 
         CraftingBlock.load();
+        ProductionBlock.load();
         PowerBlock.load();
         TurretBlock.load();
         PayloadBlock.load();
@@ -48,14 +50,15 @@ public class dominantSystemMod extends Mod {
         //dsContent.overrideLoad();
 
         dsContent.defenseLoad();
-        dsContent.productionLoad();
-        dsContent.environmentsLoad();
+        EnvironmentBlock.load();
 
         dsUnitTypes.load();
         UnitBlock.load();
 
-        RecipeRegister.load();
-        PowerRecipeRegister.load();
+        ProductionRecipe.load();
+        CraftingRecipe.load();
+        PowerRecipe.load();
+
         dsPlanets.load();
 
         Log.info("DominantSystem Loaded Complete: " + MOD.meta.version + " | Cost Time: " + (Time.elapsed() / Time.toSeconds) + " sec.");

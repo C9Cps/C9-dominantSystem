@@ -20,6 +20,19 @@ public class dsPlanets{
                 new HexSkyMesh(this, 2, 0.15f, 0.14f, 5, Color.valueOf("636363").a(0.75f), 2, 0.42f, 1f, 0.43f),
                 new HexSkyMesh(this, 3, 0.6f, 0.15f, 5, Color.valueOf("C6BCBA").a(0.75f), 2, 0.42f, 1.2f, 0.45f)
             );
+            meshLoader = () -> new SunMesh(
+                    this, 4,
+                    5, 0.3, 1.7, 1.2, 1,
+                    1.1f,
+                    //metal
+                    Color.valueOf("585B68"),
+                    Color.valueOf("3F4049"),
+                    Color.valueOf("1E1F28"),
+
+                    //runiy
+                    Color.valueOf("DB9644"),
+                    Color.valueOf("BA6B2C")
+            );
             alwaysUnlocked = true;
             landCloudColor = Color.valueOf("636363");
             atmosphereColor = Color.valueOf("8A73C6");

@@ -18,9 +18,7 @@ public class CraftingBlock {
             refractoryCrucible, oxidativeFacility,
             mycondiumCrucible,
             gelSynthesizer, gelСentrifuge,
-            crusher, smeltingFacility, thiriumArcSmelter, fiberglassSynthesizer, resourseConverter,
-            //|?|
-            filterFacility,
+            crusher, smeltingFacility, thiriumArcSmelter, fiberglassSynthesizer,
             //none used
             ammunitionFabricator,
             //For assembling units
@@ -125,7 +123,7 @@ public class CraftingBlock {
                     new MDrawLiquidTile(){{drawLiquid = dsLiquids.ozone; y = -12; padBottom = padTop = 8;}},
                     new MDrawLiquidTile(){{drawLiquid = dsLiquids.ozone; padding = 4;}},
                     new DrawDefault());
-            rotate = rotateDraw = false;
+            rot = false;
         }};
         mycondiumCrucible = new RecipeCrafter("mycondium-crucible") {{
             requirements(Category.crafting, with(dsItems.thirium, 180, dsItems.silicon, 150, dsItems.plastanium, 130, dsItems.carbide, 110));
@@ -161,16 +159,6 @@ public class CraftingBlock {
                         flameRadiusMag = this.flameRadius/3 * 2;
                         flameRadiusInMag = this.flameRadius/3;
                     }});
-        }};
-        resourseConverter = new RecipeCrafter("resourse-converter") {{
-            requirements(Category.production, with(dsItems.graphite, 40, dsItems.silicon, 75));
-            size = 2;
-            itemCapacity = 10;
-            consumePower(45f / 60f);
-            drawer = new DrawMulti(new DrawRegion("-bottom"),
-                    new DrawArcSmelt(),
-                    new DrawDefault());
-            rotate = rotateDraw = false;
         }};
         /*
         filterFacility = new RecipeCrafter("filter-facility") {{
@@ -216,7 +204,7 @@ public class CraftingBlock {
             itemCapacity = 30;
             consumePower(130f / 60f);
             drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawDefault(), new DrawPistons(), new DrawRegion("-top"));
-            rotate = rotateDraw = false;
+            rot = false;
         }};
         armorFabricator = new RecipeCrafter("armor-fabricator") {{
             requirements(Category.crafting, with(dsItems.etheronium, 180, dsItems.thirium, 210));
@@ -226,7 +214,7 @@ public class CraftingBlock {
             itemCapacity = 45;
             consumePower(130f / 60f);
             drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawDefault());
-            rotate = rotateDraw = false;
+            rot = false;
         }};
         coreFabricator = new RecipeCrafter("core-fabricator") {{
             requirements(Category.crafting, with(dsItems.etheronium, 180, dsItems.thirium, 210));
