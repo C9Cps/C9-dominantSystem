@@ -1,2 +1,2 @@
 Dominant System
-A simple Mindustry java mod
+A Mindustry java mod (MixTech planet)
